@@ -1,0 +1,4 @@
+name: ExplosionFixer
+version: '1.0-SNAPSHOT'
+main: net.fuffo.explosionFixer.ExplosionFixer
+api-version: '1.21'
