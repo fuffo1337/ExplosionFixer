@@ -9,11 +9,23 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.HashMap;
+import java.util.HashSet;
+
 public final class ExplosionFixer extends JavaPlugin implements Listener {
+
+    private final HashMap<String, String> actualNames = new HashMap<>();
+    private HashSet<String> noRegenDimensions = new HashSet<>();
 
     @Override
     public void onEnable() {
         getServer().getPluginManager().registerEvents(this, this);
+        actualNames.put("overworld", "world");
+        actualNames.put("nether", "world_nether");
+        actualNames.put("end", "world_the_end");
+
+        // TODO: aggiungere un comando
+        noRegenDimensions.add(actualNames.get("nether"));
     }
 
     @Override
@@ -28,9 +40,8 @@ public final class ExplosionFixer extends JavaPlugin implements Listener {
         Location loc = event.getLocation();
 
         // TODO: aggiungere condizioni più dettagliate così va in altri casi il plugin
-        if (loc.getWorld().getName().equalsIgnoreCase("world_nether")) {
+        if (noRegenDimensions.contains(loc.getWorld().getName())) {
             TownyRegenAPI.cancelProtectionRegenTasks();
         }
     }
-
 }
