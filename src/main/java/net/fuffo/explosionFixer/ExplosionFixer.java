@@ -1,8 +1,7 @@
 package net.fuffo.explosionFixer;
 
-import com.palmergames.bukkit.towny.TownyAPI;
-import com.palmergames.bukkit.towny.object.TownBlock;
 import com.palmergames.bukkit.towny.regen.TownyRegenAPI;
+
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -29,11 +28,8 @@ public final class ExplosionFixer extends JavaPlugin implements Listener {
         Location loc = event.getLocation();
 
         // TODO: aggiungere condizioni più dettagliate così va in altri casi il plugin
-        if (true) {
-            TownBlock townBlock = TownyAPI.getInstance().getTownBlock(loc);
-            if (townBlock != null) {
-                TownyRegenAPI.cancelProtectionRegenTasks();
-            }
+        if (loc.getWorld().getName().equalsIgnoreCase("world_nether")) {
+            TownyRegenAPI.cancelProtectionRegenTasks();
         }
     }
 
