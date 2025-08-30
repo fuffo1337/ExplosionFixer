@@ -71,6 +71,14 @@ public final class ExplosionFixer extends JavaPlugin implements Listener {
                     status = false;
                     sender.sendMessage(ChatColor.YELLOW + "ExplosionFixer succesfully" + ChatColor.RED + " disabled!");
                     break;
+                case "listdimensions":
+                    String dims = "";
+                    for (String dim : noRegenDimensions) {
+                        dims += dim + ", ";
+                    }
+                    dims = dims.substring(0, dims.length() - 2);
+                    sender.sendMessage(ChatColor.YELLOW + "Dimensions that won't regenerate explosions: " + dims);
+                    break;
                 default:
                     sender.sendMessage(helpMessage);
             }
