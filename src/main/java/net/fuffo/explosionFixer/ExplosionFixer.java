@@ -2,6 +2,7 @@ package net.fuffo.explosionFixer;
 
 import com.palmergames.bukkit.towny.regen.TownyRegenAPI;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -14,8 +15,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public final class ExplosionFixer extends JavaPlugin implements Listener {
+// TODO: sostituire ChatColor con l'alternativa non deprecata
 
+public final class ExplosionFixer extends JavaPlugin implements Listener {
+    private boolean status = true;
+    private final String helpMessage = String.format("""
+            %s"%s/explosionfixer enable%s" enables the plugin
+            "%s/explosionfixer disable%s" disables the plugin
+            "%s/explosionfixer%s" or "%s/explosionfixer help%s" shows this message
+            """, ChatColor.YELLOW, ChatColor.AQUA, ChatColor.YELLOW, ChatColor.AQUA, ChatColor.YELLOW, ChatColor.AQUA, ChatColor.YELLOW, ChatColor.AQUA, ChatColor.YELLOW);
     private final HashMap<String, String> actualNames = new HashMap<>();
     private HashSet<String> noRegenDimensions = new HashSet<>();
 
@@ -38,6 +46,7 @@ public final class ExplosionFixer extends JavaPlugin implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityExplode(EntityExplodeEvent event) {
         if (event.isCancelled()) return;
+        if (!status) return;
 
         Location loc = event.getLocation();
 
@@ -52,8 +61,23 @@ public final class ExplosionFixer extends JavaPlugin implements Listener {
         if (!command.getName().equalsIgnoreCase("explosionfixer")) {
             return false;
         }
-
-        sender.sendMessage("You used the command");
+        try{
+            switch(args[0].toLowerCase()) {
+                case "enable":
+                    status = true;
+                    sender.sendMessage(ChatColor.YELLOW + "ExplosionFixer succesfully" + ChatColor.DARK_GREEN + " enabled!");
+                    break;
+                case "disable":
+                    status = false;
+                    sender.sendMessage(ChatColor.YELLOW + "ExplosionFixer succesfully" + ChatColor.RED + " disabled!");
+                    break;
+                default:
+                    sender.sendMessage(helpMessage);
+            }
+        } catch(ArrayIndexOutOfBoundsException e) {
+            // we ball
+            sender.sendMessage(helpMessage);
+        }
 
         return true;
     }
