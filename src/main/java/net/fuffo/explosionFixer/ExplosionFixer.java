@@ -2,6 +2,12 @@ package net.fuffo.explosionFixer;
 
 import com.palmergames.bukkit.towny.regen.TownyRegenAPI;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -78,6 +84,29 @@ public final class ExplosionFixer extends JavaPlugin implements Listener {
                     }
                     dims = dims.substring(0, dims.length() - 2);
                     sender.sendMessage(ChatColor.YELLOW + "Dimensions that won't regenerate explosions: " + dims);
+                    break;
+                case "toggledimension":
+                    if(args.length == 2){
+                        if (!noRegenDimensions.contains(args[1])){
+                            noRegenDimensions.add(args[1]);
+                        } else {
+                            noRegenDimensions.remove(args[1]);
+                        }
+                    }
+                    TextComponent textComponent = Component.text("\nHere are the current explosion rules in each dimension: \n(").color(NamedTextColor.YELLOW)
+                            .append(Component.text("green").color(NamedTextColor.DARK_GREEN))
+                            .append(Component.text(" = enabled, ").color(NamedTextColor.YELLOW))
+                            .append(Component.text("red").color(NamedTextColor.RED))
+                            .append(Component.text(" = regenerating)\n\n").color(NamedTextColor.YELLOW));
+                    for (String dim : actualNames.values()){
+                        TextComponent dimComponent = Component.text(dim + "\n")
+                                .color(noRegenDimensions.contains(dim) ? NamedTextColor.DARK_GREEN : NamedTextColor.RED)
+                                .clickEvent(ClickEvent.runCommand("ef toggledimension " + dim))
+                                .decoration(TextDecoration.BOLD, true);
+                        textComponent = textComponent.append(dimComponent);
+                    }
+                    textComponent = textComponent.append(Component.text("\nYou may click any of the options above to switch between modes.").color(NamedTextColor.YELLOW));
+                    sender.sendMessage(textComponent);
                     break;
                 default:
                     sender.sendMessage(helpMessage);
