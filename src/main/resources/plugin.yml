@@ -2,3 +2,15 @@ name: ExplosionFixer
 version: '1.0-SNAPSHOT'
 main: net.fuffo.explosionFixer.ExplosionFixer
 api-version: '1.21'
+
+commands:
+  explosionfixer:
+    description: Fixes explosions or something
+    usage: /explosionfixer <args>
+    permission: explosionFixer.admin
+    aliases: [ef, expfix]
+
+permissions:
+  explosionFixer.admin:
+    description: Allows use of all plugin commands
+    default: op

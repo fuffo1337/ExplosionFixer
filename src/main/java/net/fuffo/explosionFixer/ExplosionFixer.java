@@ -3,6 +3,8 @@ package net.fuffo.explosionFixer;
 import com.palmergames.bukkit.towny.regen.TownyRegenAPI;
 
 import org.bukkit.Location;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -43,5 +45,16 @@ public final class ExplosionFixer extends JavaPlugin implements Listener {
         if (noRegenDimensions.contains(loc.getWorld().getName())) {
             TownyRegenAPI.cancelProtectionRegenTasks();
         }
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (!command.getName().equalsIgnoreCase("explosionfixer")) {
+            return false;
+        }
+
+        sender.sendMessage("You used the command");
+
+        return true;
     }
 }
