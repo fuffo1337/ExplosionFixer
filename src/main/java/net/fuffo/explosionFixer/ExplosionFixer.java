@@ -6,7 +6,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -18,6 +17,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -35,18 +35,19 @@ public final class ExplosionFixer extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+        saveDefaultConfig();
         getServer().getPluginManager().registerEvents(this, this);
         actualNames.put("overworld", "world");
         actualNames.put("nether", "world_nether");
         actualNames.put("end", "world_the_end");
 
-        // TODO: aggiungere un comando
-        noRegenDimensions.add(actualNames.get("nether"));
+        noRegenDimensions = new HashSet<>(getConfig().getStringList("no-regen-dimensions"));
     }
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        getConfig().set("no-regen-dimensions", new ArrayList<>(noRegenDimensions));
+        saveConfig();
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -107,12 +108,13 @@ public final class ExplosionFixer extends JavaPlugin implements Listener {
                     }
                     textComponent = textComponent.append(Component.text("\nYou may click any of the options above to switch between modes.").color(NamedTextColor.YELLOW));
                     sender.sendMessage(textComponent);
+                    getConfig().set("no-regen-dimensions", new ArrayList<>(noRegenDimensions));
+                    saveConfig();
                     break;
                 default:
                     sender.sendMessage(helpMessage);
             }
         } catch(ArrayIndexOutOfBoundsException e) {
-            // we ball
             sender.sendMessage(helpMessage);
         }
 
